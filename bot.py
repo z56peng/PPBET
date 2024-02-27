@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 import db
 import os
 
@@ -9,24 +10,21 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
+tree = app_commands.CommandTree(bot)
 
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
     db.initialize_db()  # 初始化数据库
+    await tree.sync(guild=discord.Object(id=1211882878699311144))
 
-@bot.command()
-async def sync(ctx):
-    await bot.tree.sync()
-    await ctx.send('CMD updated.')
-
-@bot.hybrid_command()
+@tree.hybrid_command()
 async def balance(ctx):
     user_id = ctx.author.id
     user_balance = db.get_balance(user_id)
     await ctx.send(f'Your balance is {user_balance} PP coins.')
 
-@bot.hybrid_command()
+@tree.hybrid_command()
 async def add(ctx, fund: int):
     user_id = ctx.author.id
     user_balance = db.get_balance(user_id)
