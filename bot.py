@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
 import db
+import os
+
+token=os.getenv("BOT_TOKEN")
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -37,4 +40,4 @@ async def bet(ctx, amount: int):
 
 # 运行机器人
 
-bot.run({{BOT_TOKEN}})
+bot.run(token)
